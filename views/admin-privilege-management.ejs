@@ -1,0 +1,305 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Privilege Management</title>
+    <style>
+        /* General Styling */
+        body {
+            font-family: 'Poppins', Arial, sans-serif;
+            background: linear-gradient(to bottom, #eef2f3, #c3cfe2);
+            margin: 0;
+            padding: 0;
+            color: #333;
+        }
+
+        /* Container */
+        .container {
+            margin: 20px auto;
+            max-width: 800px;
+            padding: 20px;
+            background: #fff;
+            border-radius: 10px;
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+        }
+
+        /* Navigation Bar */
+        nav {
+            display: flex;
+            justify-content: flex-end;
+            align-items: center;
+            background-color: #e74c3c;
+            padding: 10px 20px;
+            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+        }
+
+        nav a {
+            color: white;
+            text-decoration: none;
+            font-weight: bold;
+            padding: 10px 20px;
+            border-radius: 5px;
+            transition: background-color 0.3s ease, transform 0.3s ease;
+        }
+
+        nav a:hover {
+            background-color: #c0392b;
+            transform: scale(1.1);
+        }
+
+        /* Table Styling */
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            margin: 20px 0;
+            font-size: 14px;
+            background: #f9f9f9;
+            border-radius: 10px;
+            overflow: hidden;
+            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+        }
+
+        th, td {
+            padding: 8px 15px;
+            border: none;
+            text-align: center;
+        }
+
+        th {
+            background-color: #3498db;
+            color: white;
+            text-transform: uppercase;
+        }
+
+        tr:nth-child(even) {
+            background-color: #f4f7fb;
+        }
+
+        tr:hover {
+            background-color: #eaf3fc;
+            transform: scale(1.01);
+            transition: transform 0.2s ease;
+        }
+
+        /* Actions Styling */
+        td .actions {
+            display: flex;
+            justify-content: center;
+            gap: 10px;
+            align-items: center;
+        }
+
+        button, select {
+            padding: 6px 10px;
+            font-size: 12px;
+            color: white;
+            background-color: #3498db;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+            font-family: 'Poppins', Arial, sans-serif;
+            transition: all 0.3s ease;
+        }
+
+        button:hover {
+            background-color: #2980b9;
+            transform: scale(1.05);
+        }
+
+        .btn-danger {
+            background-color: #e74c3c;
+        }
+
+        .btn-danger:hover {
+            background-color: #c0392b;
+        }
+
+        select {
+            background-color: #f1f7fc;
+            color: #333;
+            border: 1px solid #ddd;
+            font-family: 'Poppins', Arial, sans-serif;
+        }
+
+        select:hover {
+            border-color: #3498db;
+        }
+
+        /* Add User Styling */
+        .add-user {
+            margin-top: 30px;
+            padding: 20px;
+            background: #f9f9f9;
+            border-radius: 10px;
+            box-shadow: 0 2px 6px rgba(0, 0, 0, 0.1);
+        }
+
+        .add-user h3 {
+            margin-bottom: 15px;
+            font-size: 18px;
+            text-align: center;
+            color: #333;
+        }
+
+        .add-user label {
+            display: block;
+            font-size: 14px;
+            margin: 10px 0 5px;
+            color: #333;
+        }
+
+        .add-user input, .add-user select {
+            width: 100%;
+            padding: 10px;
+            margin-bottom: 15px;
+            border: 1px solid #ddd;
+            border-radius: 5px;
+            font-size: 14px;
+            font-family: 'Poppins', Arial, sans-serif;
+        }
+
+        .add-user button {
+            width: 100%;
+            padding: 10px;
+            font-size: 14px;
+            color: white;
+            background-color: #3498db;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+            transition: background-color 0.3s ease, transform 0.3s ease;
+        }
+
+        .add-user button:hover {
+            background-color: #2980b9;
+            transform: scale(1.05);
+        }
+    </style>
+</head>
+<body>
+    <nav>
+        <a href="/admin-dashboard">Back</a>
+    </nav>
+    <div class="container">
+        <h2>Admin Accounts</h2>
+        <table>
+            <thead>
+                <tr>
+                    <th>Username</th>
+                    <th>Actions</th>
+                </tr>
+            </thead>
+            <tbody>
+                <% users.filter(user => user.role === "admin").forEach(user => { %>
+                    <tr>
+                        <td><%= user.username %></td>
+                        <td>
+                            <div class="actions">
+                                <form action="/update-privilege" method="POST">
+                                    <input type="hidden" name="userId" value="<%= user._id %>">
+                                    <select name="newRole">
+                                        <option value="admin" selected>Admin</option>
+                                        <option value="teacher">Teacher</option>
+                                        <option value="student">Student</option>
+                                    </select>
+                                    <button type="submit">Update</button>
+                                </form>
+                                <form action="/delete-user" method="POST">
+                                    <input type="hidden" name="userId" value="<%= user._id %>">
+                                    <button type="submit" class="btn-danger">Delete</button>
+                                </form>
+                            </div>
+                        </td>
+                    </tr>
+                <% }) %>
+            </tbody>
+        </table>
+
+        <h2>Teacher Accounts</h2>
+        <table>
+            <thead>
+                <tr>
+                    <th>Username</th>
+                    <th>Actions</th>
+                </tr>
+            </thead>
+            <tbody>
+                <% users.filter(user => user.role === "teacher").forEach(user => { %>
+                    <tr>
+                        <td><%= user.username %></td>
+                        <td>
+                            <div class="actions">
+                                <form action="/update-privilege" method="POST">
+                                    <input type="hidden" name="userId" value="<%= user._id %>">
+                                    <select name="newRole">
+                                        <option value="admin">Admin</option>
+                                        <option value="teacher" selected>Teacher</option>
+                                        <option value="student">Student</option>
+                                    </select>
+                                    <button type="submit">Update</button>
+                                </form>
+                                <form action="/delete-user" method="POST">
+                                    <input type="hidden" name="userId" value="<%= user._id %>">
+                                    <button type="submit" class="btn-danger">Delete</button>
+                                </form>
+                            </div>
+                        </td>
+                    </tr>
+                <% }) %>
+            </tbody>
+        </table>
+
+        <h2>Student Accounts</h2>
+        <table>
+            <thead>
+                <tr>
+                    <th>Username</th>
+                    <th>Actions</th>
+                </tr>
+            </thead>
+            <tbody>
+                <% users.filter(user => user.role === "student").forEach(user => { %>
+                    <tr>
+                        <td><%= user.username %></td>
+                        <td>
+                            <div class="actions">
+                                <form action="/update-privilege" method="POST">
+                                    <input type="hidden" name="userId" value="<%= user._id %>">
+                                    <select name="newRole">
+                                        <option value="admin">Admin</option>
+                                        <option value="teacher">Teacher</option>
+                                        <option value="student" selected>Student</option>
+                                    </select>
+                                    <button type="submit">Update</button>
+                                </form>
+                                <form action="/delete-user" method="POST">
+                                    <input type="hidden" name="userId" value="<%= user._id %>">
+                                    <button type="submit" class="btn-danger">Delete</button>
+                                </form>
+                            </div>
+                        </td>
+                    </tr>
+                <% }) %>
+            </tbody>
+        </table>
+
+        <div class="add-user">
+            <h3>Add User</h3>
+            <form action="/add-user" method="POST">
+                <label for="username">Username:</label>
+                <input id="username" type="text" name="username" required>
+                <label for="password">Password:</label>
+                <input id="password" type="password" name="password" required>
+                <label for="role">Role:</label>
+                <select id="role" name="role">
+                    <option value="admin">Admin</option>
+                    <option value="teacher">Teacher</option>
+                    <option value="student">Student</option>
+                </select>
+                <button type="submit">Add User</button>
+            </form>
+        </div>
+    </div>
+</body>
+</html>

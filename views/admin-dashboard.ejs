@@ -1,0 +1,141 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Admin Dashboard</title>
+    <style>
+        /* Background and Animation */
+        body {
+            background: radial-gradient(circle at top, #f5f7fa, #c3cfe2);
+            font-family: 'Poppins', sans-serif;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            min-height: 100vh;
+            margin: 0;
+            padding: 20px;
+            overflow: hidden;
+            flex-direction: column; /* Stack elements vertically */
+        }
+
+        /* Floating Animations */
+        body::before,
+        body::after {
+            content: '';
+            position: absolute;
+            width: 300px;
+            height: 300px;
+            background: rgba(255, 255, 255, 0.15);
+            border-radius: 50%;
+            filter: blur(100px);
+            animation: moveBubbles 20s infinite alternate;
+        }
+
+        body::before {
+            top: -10%;
+            left: -10%;
+        }
+
+        body::after {
+            bottom: -10%;
+            right: -15%;
+        }
+
+        @keyframes moveBubbles {
+            0% {
+                transform: translate(0, 0);
+            }
+            100% {
+                transform: translate(50px, -50px);
+            }
+        }
+
+        /* Main Container */
+        .container {
+            background-color: #ffffff;
+            padding: 20px;
+            border-radius: 20px;
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.1);
+            max-width: 500px;
+            text-align: center;
+            transition: transform 0.3s ease;
+        }
+
+        .container:hover {
+            transform: scale(1.02);
+        }
+
+        /* Logout Button */
+        .logout-btn {
+            position: absolute;
+            top: 20px;
+            right: 20px;
+            padding: 8px 20px;
+            background-color: #e74c3c;
+            color: #ffffff;
+            border-radius: 20px;
+            text-transform: uppercase;
+            text-decoration: none;
+            font-weight: bold;
+            transition: transform 0.2s ease, background-color 0.3s ease;
+        }
+
+        .logout-btn:hover {
+            background-color: #c0392b;
+            transform: scale(1.1);
+        }
+
+        h2 {
+            color: #34495e;
+            font-size: 2.5rem;
+            margin-bottom: 20px;
+            text-align: center;
+            transition: color 0.3s ease, transform 0.2s ease;
+        }
+
+        h2:hover {
+            color: #3498db;
+            transform: scale(1.05);
+        }
+
+        /* Buttons */
+        .btn {
+            display: inline-block;
+            padding: 12px 25px;
+            font-size: 16px;
+            font-weight: 600;
+            border-radius: 50px;
+            background-color: #3498db;
+            color: white;
+            text-decoration: none;
+            margin: 10px 0;
+            transition: transform 0.3s ease, box-shadow 0.3s ease, background-color 0.3s ease, color 0.3s ease;
+        }
+
+        .btn:hover {
+            transform: scale(1.1);
+            background-color: white;
+            color: #3498db;
+            box-shadow: 0px 4px 10px rgba(0, 0, 0, 0.2);
+        }
+
+        .btn-success {
+            background-color: #2ecc71;
+        }
+
+        .btn-success:hover {
+            background-color: white;
+            color: #2ecc71;
+        }
+    </style>
+</head>
+<body>
+    <a href="/logout" class="logout-btn">Logout</a>
+    <h2>Hi Admin !</h2> <!-- Heading is centered above the card -->
+    <div class="container">
+        <a href="/admin-event-schedule" class="btn">Event Schedule</a>
+        <a href="/admin-privilege-management" class="btn btn-success">Privilege Management</a>
+    </div>
+</body>
+</html>

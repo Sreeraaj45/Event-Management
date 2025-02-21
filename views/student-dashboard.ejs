@@ -1,0 +1,290 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Student Dashboard</title>
+    <style>
+        /* General Styling */
+        body {
+            font-family: 'Poppins', Arial, sans-serif;
+            background: linear-gradient(to bottom, #eef2f3, #c3cfe2);
+            margin: 0;
+            padding: 0;
+            color: #333;
+        }
+
+        .container {
+            margin: 20px auto;
+            max-width: 800px;
+        }
+
+        h1, h2 {
+            color: #34495e;
+            text-align: center;
+            font-weight: bold;
+        }
+
+        /* Card Styling */
+        .card {
+            background: rgba(255, 255, 255, 0.9); /* Slightly opaque white */
+            padding: 20px;
+            border-radius: 20px;
+            box-shadow: 0 8px 15px rgba(0, 0, 0, 0.1);
+            margin-bottom: 20px;
+        }
+
+        /* Form Styling */
+        form label {
+            font-weight: 600; /* Semi-bold labels */
+            display: block;
+            margin-bottom: 5px;
+        }
+
+        form input, form select {
+            margin: 10px 0;
+            padding: 12px;
+            width: calc(100% - 24px);
+            border: 1px solid #ddd;
+            border-radius: 10px;
+            font-size: 14px;
+        }
+
+        .form-group {
+            display: flex;
+            gap: 10px;
+        }
+
+        .form-group > div {
+            flex: 1;
+        }
+
+        /* Buttons */
+        button {
+            padding: 12px 20px;
+            font-family: 'Poppins', Arial, sans-serif;
+            font-size: 14px;
+            font-weight: bold;
+            background-color: #27ae60; /* Green button */
+            color: white;
+            border: none;
+            border-radius: 20px; /* Rounded corners */
+            cursor: pointer;
+            transition: background-color 0.3s ease, transform 0.3s ease, box-shadow 0.3s ease;
+            margin-top: 15px;
+            display: block;
+            margin-left: auto;
+            margin-right: auto; /* Center the button */
+        }
+
+        button:hover {
+            background-color: #1e8449;
+            transform: scale(1.05);
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+        }
+
+        /* Logout Button */
+        a.logout {
+            position: absolute;
+            top: 10px;
+            right: 20px;
+            color: white;
+            text-decoration: none;
+            font-weight: bold;
+            background-color: #e74c3c; /* Red logout button */
+            padding: 10px 20px;
+            border-radius: 15px; /* Rounded corners */
+            transition: background-color 0.3s ease, transform 0.3s ease, box-shadow 0.3s ease;
+        }
+
+        a.logout:hover {
+            background-color: #c0392b;
+            transform: scale(1.05);
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+        }
+
+        /* Table Styling */
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            margin-top: 20px;
+            font-size: 16px;
+            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+            border-radius: 10px;
+            overflow: hidden;
+        }
+
+        th, td {
+            padding: 12px;
+            border: 1px solid rgba(0, 0, 0, 0.05);
+            text-align: center;
+        }
+
+        th {
+            background-color: #3498db;
+            color: white;
+            text-transform: uppercase;
+        }
+
+        tr {
+            transition: background-color 0.3s ease, transform 0.2s ease;
+        }
+
+        tr:hover {
+            transform: scale(1.01);
+            box-shadow: 0 2px 6px rgba(0, 0, 0, 0.1);
+        }
+
+        /* Status Row Coloring */
+        tr.status-approved {
+            background-color: rgba(46, 204, 113, 0.2); /* Light translucent green for approved */
+        }
+
+        tr.status-pending {
+            background-color: rgba(241, 196, 15, 0.2); /* Light translucent yellow for pending */
+        }
+
+        tr.status-rejected {
+            background-color: rgba(231, 76, 60, 0.2); /* Light translucent red for rejected */
+        }
+
+        /* Filter Dropdown Styling */
+        #filterStatus {
+            margin: 10px 0;
+            padding: 12px;
+            width: 100%;
+            border: 1px solid #ddd;
+            border-radius: 10px;
+            font-size: 14px;
+            background: white;
+            font-family: 'Poppins', Arial, sans-serif;
+        }
+
+        /* Responsive Design */
+        @media screen and (max-width: 768px) {
+            .container {
+                margin: 10px;
+                padding: 15px;
+            }
+
+            h1, h2 {
+                font-size: 18px;
+            }
+
+            table {
+                font-size: 14px;
+            }
+
+            button {
+                padding: 10px 15px;
+                font-size: 12px;
+            }
+
+            .form-group {
+                flex-direction: column;
+            }
+        }
+    </style>
+</head>
+<body>
+    <a href="/logout" class="logout">Logout</a>
+    <div class="container">
+        <!-- Book a Slot Section -->
+        <div class="card">
+            <h2>Book a Slot</h2>
+            <form action="/book-slot" method="POST" id="booking-form">
+                <label for="auditorium">Auditorium:</label>
+                <select id="auditorium" name="auditorium" required>
+                    <option value="Auditorium A">Auditorium A</option>
+                    <option value="Auditorium B">Auditorium B</option>
+                    <option value="Auditorium C">Auditorium C</option>
+                </select>
+
+                <label for="eventName">Event Name:</label>
+                <input type="text" id="eventName" name="eventName" required>
+
+                <div class="form-group">
+                    <div>
+                        <label for="timeStart">Start Time:</label>
+                        <input type="time" id="timeStart" name="timeStart" required>
+                    </div>
+                    <div>
+                        <label for="timeEnd">End Time:</label>
+                        <input type="time" id="timeEnd" name="timeEnd" required>
+                    </div>
+                </div>
+
+                <label for="date">Date:</label>
+                <input type="date" id="date" name="date" required>
+
+                <label for="organizer">Organizer:</label>
+                <input type="text" id="organizer" name="organizer" required>
+
+                <button type="submit">Book Slot</button>
+            </form>
+        </div>
+
+        <!-- Your Bookings Section -->
+        <div class="card">
+            <h2>Your Bookings</h2>
+            <label for="filterStatus">Filter by Status:</label>
+            <select id="filterStatus">
+                <option value="all">All</option>
+                <option value="approved">Approved</option>
+                <option value="pending">Pending</option>
+                <option value="rejected">Rejected</option>
+            </select>
+
+            <table>
+                <thead>
+                    <tr>
+                        <th>Auditorium</th>
+                        <th>Event Name</th>
+                        <th>Date</th>
+                        <th>Time</th>
+                        <th>Organizer</th>
+                        <th>Status</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <% events.forEach(event => { %>
+                        <tr class="status-<%= event.status %>">
+                            <td><%= event.auditorium %></td>
+                            <td><%= event.eventName %></td>
+                            <td><%= new Date(event.date).toLocaleDateString() %></td>
+                            <td><%= event.timeStart %> - <%= event.timeEnd %></td>
+                            <td><%= event.organizer %></td>
+                            <td><%= event.status.charAt(0).toUpperCase() + event.status.slice(1) %></td>
+                        </tr>
+                    <% }) %>
+                </tbody>
+            </table>
+        </div>
+    </div>
+
+    <script>
+        // Form validation for start and end time
+        document.getElementById('booking-form').addEventListener('submit', function (e) {
+            const startTime = document.getElementById('timeStart').value;
+            const endTime = document.getElementById('timeEnd').value;
+            if (startTime >= endTime) {
+                alert('End time must be after start time.');
+                e.preventDefault(); // Prevent form submission
+            }
+        });
+
+        // Filter bookings by status
+        document.getElementById('filterStatus').addEventListener('change', function () {
+            const status = this.value;
+            const rows = document.querySelectorAll('tbody tr');
+            rows.forEach(row => {
+                if (status === 'all' || row.classList.contains(`status-${status}`)) {
+                    row.style.display = '';
+                } else {
+                    row.style.display = 'none';
+                }
+            });
+        });
+    </script>
+</body>
+</html>

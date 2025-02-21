@@ -1,0 +1,276 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Teacher Dashboard</title>
+    <style>
+        /* General Styling */
+        body {
+            font-family: 'Poppins', Arial, sans-serif;
+            background: linear-gradient(to bottom, #eef2f3, #c3cfe2);
+            margin: 0;
+            padding: 0;
+            color: #333;
+        }
+
+        .container {
+            margin: 20px auto;
+            max-width: 800px;
+            padding: 20px;
+        }
+
+        h1, h2 {
+            color: #34495e;
+            text-align: center;
+            font-weight: bold;
+        }
+
+        /* Card Styling */
+        .card {
+            background: rgba(255, 255, 255, 0.9); /* Slight opacity for separation */
+            padding: 20px;
+            border-radius: 20px;
+            box-shadow: 0 8px 15px rgba(0, 0, 0, 0.1);
+            margin-bottom: 20px;
+        }
+
+        .card-small {
+            padding: 15px; /* Reduced padding for compact size */
+            border-radius: 15px;
+        }
+
+        /* Table Styling */
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            margin-top: 20px;
+            font-size: 16px;
+            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+            border-radius: 10px;
+            overflow: hidden;
+        }
+
+        th, td {
+            padding: 12px;
+            border: 1px solid #ddd;
+            text-align: center;
+        }
+
+        th {
+            background-color: #3498db;
+            color: white;
+            text-transform: uppercase;
+        }
+
+        tr:nth-child(even) {
+            background-color: #f9f9f9;
+        }
+
+        tr:hover {
+            background-color: #f1f7fc;
+            transform: scale(1.02);
+            transition: transform 0.3s ease, background-color 0.3s ease;
+        }
+
+        /* Buttons */
+        button, form button {
+            padding: 10px 20px;
+            font-family: 'Poppins', Arial, sans-serif;
+            font-size: 14px;
+            font-weight: bold;
+            background-color: #3498db;
+            color: white;
+            border: none;
+            border-radius: 15px; /* Rounded corners */
+            cursor: pointer;
+            transition: background-color 0.3s ease, transform 0.3s ease, box-shadow 0.3s ease;
+        }
+
+        button:hover, form button:hover {
+            background-color: #2980b9;
+            transform: scale(1.05);
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+        }
+
+        /* Reject Button */
+        form button[style*="background-color: red"] {
+            background-color: #e74c3c;
+        }
+
+        form button[style*="background-color: red"]:hover {
+            background-color: #c0392b;
+        }
+
+        /* Green Create Event Button */
+        .btn-green {
+            background-color: #27ae60; /* Green button */
+            color: white;
+        }
+
+        .btn-green:hover {
+            background-color: #1e8449;
+        }
+
+        /* Logout Button */
+        a.logout {
+            position: absolute;
+            top: 10px;
+            right: 20px;
+            color: white;
+            text-decoration: none;
+            font-weight: bold;
+            background-color: #e74c3c; /* Red logout button */
+            padding: 10px 20px;
+            border-radius: 15px; /* Rounded corners */
+            transition: background-color 0.3s ease, transform 0.3s ease, box-shadow 0.3s ease;
+        }
+
+        a.logout:hover {
+            background-color: #c0392b;
+            transform: scale(1.05);
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+        }
+
+        /* Form Styling */
+        form label {
+            font-weight: 600; /* Semi-bold labels */
+            display: block;
+            margin-bottom: 5px;
+        }
+
+        form input, form select {
+            margin: 10px 0;
+            padding: 12px;
+            width: calc(100% - 24px);
+            border: 1px solid #ddd;
+            border-radius: 10px;
+            font-size: 14px;
+        }
+
+        .form-group {
+            display: flex;
+            gap: 10px;
+        }
+
+        .form-group > label {
+            flex: 1;
+        }
+
+        .form-group input {
+            width: 100%;
+        }
+
+        /* Responsive Design */
+        @media screen and (max-width: 768px) {
+            .container {
+                margin: 10px;
+                padding: 15px;
+            }
+
+            h1, h2 {
+                font-size: 18px;
+            }
+
+            table {
+                font-size: 14px;
+            }
+
+            button, form button {
+                padding: 8px 15px;
+                font-size: 12px;
+            }
+
+            .form-group {
+                flex-direction: column;
+            }
+        }
+    </style>
+</head>
+<body>
+    <!-- Logout Button -->
+    <a href="/logout" class="logout">Logout</a>
+
+    <!-- Dashboard Container -->
+    <div class="container">
+        <!-- Pending Event Approvals Section -->
+        <div class="card">
+            <h2>Pending Event Approvals</h2>
+            <table>
+                <thead>
+                    <tr>
+                        <th>Auditorium</th>
+                        <th>Event Name</th>
+                        <th>Date</th>
+                        <th>Time</th>
+                        <th>Organizer</th>
+                        <th>Actions</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <% if (events.length > 0) { %>
+                        <% events.forEach(event => { %>
+                            <tr>
+                                <td><%= event.auditorium %></td>
+                                <td><%= event.eventName %></td>
+                                <td><%= new Date(event.date).toLocaleDateString() %></td>
+                                <td><%= event.timeStart %> - <%= event.timeEnd %></td>
+                                <td><%= event.organizer %></td>
+                                <td>
+                                    <div style="display: flex; gap: 10px; justify-content: center;">
+                                        <form action="/approve-event" method="POST">
+                                            <input type="hidden" name="eventId" value="<%= event._id %>">
+                                            <button type="submit">Approve</button>
+                                        </form>
+                                        <form action="/reject-event" method="POST">
+                                            <input type="hidden" name="eventId" value="<%= event._id %>">
+                                            <button type="submit" style="background-color: red;">Reject</button>
+                                        </form>
+                                    </div>
+                                </td>
+                            </tr>
+                        <% }); %>
+                    <% } else { %>
+                        <tr>
+                            <td colspan="6">No pending events.</td>
+                        </tr>
+                    <% } %>
+                </tbody>
+            </table>
+        </div>
+
+        <!-- Create Event Section -->
+        <div class="card card-small">
+            <h2>Create a New Event</h2>
+            <form action="/create-event" method="POST">
+                <label for="auditorium">Auditorium:</label>
+                <select id="auditorium" name="auditorium" required>
+                    <option value="Auditorium A">Auditorium A</option>
+                    <option value="Auditorium B">Auditorium B</option>
+                    <option value="Auditorium C">Auditorium C</option>
+                </select>
+
+                <label for="eventName">Event Name:</label>
+                <input type="text" id="eventName" name="eventName" required>
+
+                <div class="form-group">
+                    <label for="timeStart">Start Time:</label>
+                    <input type="time" id="timeStart" name="timeStart" required>
+                    <label for="timeEnd">End Time:</label>
+                    <input type="time" id="timeEnd" name="timeEnd" required>
+                </div>
+
+                <label for="date">Date:</label>
+                <input type="date" id="date" name="date" required>
+
+                <label for="organizer">Organizer:</label>
+                <input type="text" id="organizer" name="organizer" value="<%= user.username %>" readonly>
+
+                <div style="text-align: center; margin-top: 10px;">
+                    <button type="submit" class="btn-green">Create Event</button>
+                </div>
+            </form>
+        </div>
+    </div>
+</body>
+</html>

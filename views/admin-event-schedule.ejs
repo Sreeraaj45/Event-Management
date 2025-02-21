@@ -1,0 +1,314 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Admin Event Schedule</title>
+    <style>
+        /* General Styling */
+        body {
+            font-family: 'Poppins', Arial, sans-serif;
+            background: linear-gradient(to bottom, #eef2f3, #c3cfe2);
+            margin: 0;
+            padding: 0;
+            color: #333;
+        }
+
+        /* Container */
+        .container {
+            margin: 20px auto;
+            max-width: 1000px;
+        }
+
+        /* Navigation Bar */
+        nav {
+            display: flex;
+            justify-content: flex-end;
+            align-items: center;
+            background-color: #3498db;
+            padding: 15px 20px;
+            color: white;
+            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+        }
+
+        nav a {
+            color: white;
+            text-decoration: none;
+            font-weight: bold;
+            padding: 8px 15px;
+            border-radius: 5px;
+            transition: background-color 0.3s ease;
+        }
+
+        nav a.back-btn {
+            background-color: #e74c3c;
+        }
+
+        nav a:hover {
+            background-color: #c0392b;
+        }
+
+        /* Cards */
+        .card {
+            background: white;
+            padding: 20px;
+            border-radius: 15px;
+            box-shadow: 0 8px 15px rgba(0, 0, 0, 0.1);
+            margin-bottom: 30px;
+        }
+
+        /* Headings */
+        h2, h3 {
+            color: #34495e;
+            font-family: 'Poppins', Arial, sans-serif;
+            text-align: center;
+        }
+
+        /* Table Styling */
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            margin-top: 20px;
+            font-size: 16px;
+            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+            overflow: hidden;
+        }
+
+        th, td {
+            padding: 12px;
+            border: 1px solid #ddd;
+            text-align: center;
+        }
+
+        th {
+            background-color: #3498db;
+            color: white;
+            text-transform: uppercase;
+        }
+
+        tr:nth-child(even) {
+            background-color: #f9f9f9;
+        }
+
+        tr:hover {
+            background-color: #f1f7fc;
+            transform: scale(1.01);
+            transition: transform 0.2s ease;
+        }
+
+        /* Action Buttons */
+        .edit-icon {
+            cursor: pointer;
+            color: #3498db;
+            font-size: 16px;
+            transition: color 0.3s ease, transform 0.3s ease;
+        }
+
+        .edit-icon:hover {
+            color: #1c5b8c;
+            transform: scale(1.2);
+        }
+
+        .btn-danger {
+            background-color: #e74c3c;
+            color: white;
+            padding: 8px 15px;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+            transition: background-color 0.3s ease, transform 0.3s ease;
+        }
+
+        .btn-danger:hover {
+            background-color: #c0392b;
+            transform: scale(1.05);
+        }
+
+        /* Form Inputs */
+        form input, form select {
+            margin: 5px 0;
+            padding: 10px;
+            width: calc(100% - 20px);
+            border: 1px solid #ddd;
+            border-radius: 5px;
+            font-size: 14px;
+            font-family: 'Poppins', Arial, sans-serif;
+        }
+
+        form button {
+            padding: 10px 20px;
+            background-color: #3498db;
+            color: white;
+            border: none;
+            border-radius: 5px;
+            font-size: 14px;
+            cursor: pointer;
+            transition: background-color 0.3s ease, transform 0.3s ease;
+            font-family: 'Poppins', Arial, sans-serif;
+        }
+
+        form button:hover {
+            background-color: #2980b9;
+            transform: scale(1.05);
+        }
+
+        /* Edit Form */
+        .edit-form {
+            display: none;
+            margin-top: 0;
+            background-color: #f9f9f9;
+            border: 1px solid #ddd;
+            border-radius: 10px;
+            padding: 15px;
+            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+            position: absolute;
+            top: 50px;
+            right: 20px;
+            width: 300px;
+        }
+
+        .edit-form.active {
+            display: block;
+            animation: slideIn 0.5s ease-out;
+        }
+
+        @keyframes slideIn {
+            from {
+                opacity: 0;
+                transform: translateX(100%);
+            }
+            to {
+                opacity: 1;
+                transform: translateX(0);
+            }
+        }
+
+        /* Add Event Form */
+        .section {
+            padding: 20px;
+            border-radius: 10px;
+            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+        }
+
+        /* Hover Effects for Rows */
+        tr:hover td {
+            color: #3498db;
+        }
+
+        /* Responsive Design */
+        @media screen and (max-width: 768px) {
+            .edit-form {
+                position: static;
+                width: 100%;
+            }
+
+            nav {
+                justify-content: center;
+            }
+        }
+    </style>
+    <script>
+        function toggleEditForm(eventId) {
+            const form = document.getElementById(`edit-form-${eventId}`);
+            document.querySelectorAll('.edit-form').forEach(f => f.classList.remove('active'));
+            form.classList.add('active');
+
+            const eventList = document.querySelector('.card');
+            eventList.style.marginRight = '320px';
+        }
+    </script>
+</head>
+<body>
+    <nav>
+        <a href="/admin-dashboard" class="back-btn">Back</a>
+    </nav>
+    <div class="container">
+        <div class="card">
+            <h2>Event List</h2>
+            <table>
+                <thead>
+                    <tr>
+                        <th>Event Name</th>
+                        <th>Auditorium</th>
+                        <th>Date</th>
+                        <th>Time</th>
+                        <th>Organizer</th>
+                        <th>Actions</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <% events.forEach(event => { %>
+                        <tr>
+                            <td><%= event.eventName %></td>
+                            <td><%= event.auditorium %></td>
+                            <td><%= event.date ? new Date(event.date).toDateString() : "No Date Provided" %></td>
+                            <td><%= event.timeStart %> - <%= event.timeEnd %></td>
+                            <td><%= event.organizer %></td>
+                            <td>
+                                <!-- Delete Button -->
+                                <form action="/delete-event" method="POST" style="display: inline;">
+                                    <input type="hidden" name="eventId" value="<%= event._id %>">
+                                    <button type="submit" class="btn-danger">Delete</button>
+                                </form>
+                
+                                <!-- Update Button -->
+                                <form action="/update-event" method="POST" style="display: inline;">
+                                    <input type="hidden" name="eventId" value="<%= event._id %>">
+                                    <input type="hidden" name="eventName" value="<%= event.eventName %>">
+                                    <input type="hidden" name="auditorium" value="<%= event.auditorium %>">
+                                    <input type="hidden" name="date" value="<%= event.date ? event.date.toISOString().split('T')[0] : '' %>">
+                                    <input type="hidden" name="timeStart" value="<%= event.timeStart %>">
+                                    <input type="hidden" name="timeEnd" value="<%= event.timeEnd %>">
+                                    <input type="hidden" name="organizer" value="<%= event.organizer %>">
+                                    <button type="submit" class="btn btn-success">Update</button>
+                                </form>
+                            </td>
+                        </tr>
+                    <% }) %>
+                </tbody>
+                
+            </table>
+        </div>
+
+        <% events.forEach(event => { %>
+            <div id="edit-form-<%= event._id %>" class="edit-form">
+                <form action="/update-event" method="POST">
+                    <input type="hidden" name="eventId" value="<%= event._id %>">
+                    <label>Event Name: <input type="text" name="eventName" value="<%= event.eventName %>" required></label>
+                    <label>Auditorium:
+                        <select name="auditorium">
+                            <option value="Auditorium A" <%= event.auditorium === "Auditorium A" ? "selected" : "" %>>Auditorium A</option>
+                            <option value="Auditorium B" <%= event.auditorium === "Auditorium B" ? "selected" : "" %>>Auditorium B</option>
+                            <option value="Auditorium C" <%= event.auditorium === "Auditorium C" ? "selected" : "" %>>Auditorium C</option>
+                        </select>
+                    </label>
+                    <label>Date: <input type="date" name="date" value="<%= event.date ? event.date.toISOString().split('T')[0] : '' %>" required></label>
+                    <label>Start Time: <input type="time" name="timeStart" value="<%= event.timeStart %>" required></label>
+                    <label>End Time: <input type="time" name="timeEnd" value="<%= event.timeEnd %>" required></label>
+                    <label>Organizer: <input type="text" name="organizer" value="<%= event.organizer %>" required></label>
+                    <button type="submit">Update</button>
+                </form>
+            </div>
+        <% }) %>
+
+        <div class="card section">
+            <h2>Add Event</h2>
+            <form action="/add-event" method="POST">
+                <label>Event Name: <input type="text" name="eventName" required></label><br>
+                <label>Auditorium:
+                    <select name="auditorium">
+                        <option value="Auditorium A">Auditorium A</option>
+                        <option value="Auditorium B">Auditorium B</option>
+                        <option value="Auditorium C">Auditorium C</option>
+                    </select>
+                </label><br>
+                <label>Date: <input type="date" name="date" required></label><br>
+                <label>Start Time: <input type="time" name="timeStart" required></label><br>
+                <label>End Time: <input type="time" name="timeEnd" required></label><br>
+                <label>Organizer: <input type="text" name="organizer" required></label><br>
+                <button type="submit">Add Event</button>
+            </form>
+        </div>
+    </div>
+</body>
+</html>
