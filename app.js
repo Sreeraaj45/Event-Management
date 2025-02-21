@@ -10,7 +10,7 @@ const rateLimit = require("express-rate-limit");
 // Express App
 const app = express();
 
-const dbURI = "mongodb+srv://sreeraaj:mypassword123@cluster0.y1hqf.mongodb.net/?retryWrites=true&w=majority&appName=Cluster0";
+const dbURI = "";//your mongourl
 
 mongoose
   .connect(dbURI, { useNewUrlParser: true, useUnifiedTopology: true })
